@@ -1,0 +1,95 @@
+\documentclass{article} % EXPAND THE PREAMBLE TO SEE ALL OF THE CODE
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsfonts} 
+\allowdisplaybreaks
+\usepackage{amssymb}
+\usepackage{esint} % for more integral symbols
+\usepackage[margin=1.75in]{geometry} % [margin=1.0in]
+\usepackage{graphicx} % more arguments for the \includegraphics command
+\usepackage{wrapfig} 
+\usepackage{textcomp} % more text symbols
+\usepackage{mwe} % used for idk?
+\usepackage{gensymb} % for symbols (e.g \degree and \ohm)
+\providecommand{\e}[1]{\ensuremath{\times 10^{#1}}}
+\usepackage{multicol} % for columns
+\usepackage{float} % to better format tables
+\restylefloat{table} % to better format tables
+\usepackage{tabularx} % to better format tables
+\usepackage{titlesec} 
+\usepackage{enumitem} % allows better formatting for list environments
+\usepackage{tikz} % graphs and drawings
+\newcommand{\comment}[1]{} % for multiline comments
+\usepackage[stretch=10]{microtype} % best package ever
+\usepackage{booktabs} % for all your fancy table needs
+\usepackage{environ}
+\usepackage{siunitx}
+\usepackage{mathrsfs}
+\usepackage{cancel}
+\usepackage{multirow} % allows multirow cells in tables
+\usepackage{xcolor} % fancier color options
+\usepackage{tikz-qtree} % trees
+\usepackage{forest} % more trees (better imo)
+\usepackage{mathtools}
+\usepackage{hyperref}
+
+\usepackage{contour}
+\usepackage{ulem}
+\renewcommand{\ULdepth}{1.8pt}
+\contourlength{0.8pt}
+
+\newcommand{\myuline}[1]{
+  \uline{\phantom{#1}}%
+  \llap{\contour{white}{#1}}%
+}
+
+
+
+\renewcommand{\arraystretch}{1} 
+
+\title{CS 433 Project Proposal}
+\author{Zane Globus-O'Harra, Doug Ure}
+\date{\textit{14 April 2023}}
+
+\begin{document}
+\maketitle
+
+Two-factor authentication (2FA) is the contemporary approach to
+authorizing a user. The first authentication factor is the user's
+password, with the second factor being an additional piece of
+information that only the user could know, often a PIN or a push
+notification sent to the user over a secure channel to a trusted device. However, both
+PIN-2FA and push-based 2FA have some issues, which are addressed in the
+paper ``2D-2FA: A New Dimension In Two-Factor Authentication'' by
+Maliheh Shirvanian and Shashank
+Agrawal.\footnote{\href{https://arxiv.org/abs/2110.15872}{\texttt{https://arxiv.org/abs/2110.15872}}}
+
+Some attacks to these two common 2FA methods include shoulder surfing,
+short PINs, and neglectful user approvals. The authors present a new
+approach to 2FA, which they have coined ``2D-2FA.'' In this new
+approach, when a user logs in with their username and password, a
+unique identifier is displayed to them. The user then inputs
+this same identifier on their device. A one-time PIN is generated on the
+device, and transferred automatically to the server, along with the
+identifier. The identifier is used in the PIN's computation, so that the
+PIN is bound to a specific session. 
+
+The user's device and the server agree on a secret key during a one-time
+registration process, which is also used in the PIN computation. Once
+the PIN is transferred to the server, the server authenticates the
+session associated with the identifier by verifying the PIN, thereby
+taking two dimensions into account (the PIN and the identifier).
+
+For our project, we hope to replicate the results of this paper using
+software. We will create programs for the server and device, make it so
+that they can talk to each other, and implement the 2D-2FA requirements.
+If we have time, we will also attempt to implement ``Typing-Proof,'' an
+algorithm presented by Dr. Li et al. in his
+paper.\footnote{Typing-Proof: Usable, Secure and Low-Cost Two-Factor
+Authentication Based on Keystroke Timings, by Ximing Liu, Yingjiu Li,
+Robert H. Deng} However, we think that this additional implementation
+will be a bit more challenging for us, as it involves cross-referencing
+audio intensity spikes with keystroke timings, and would involve
+more work of figuring out how to filter audio and detect keystrokes.
+
+
+\end{document}
