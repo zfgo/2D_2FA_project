@@ -11,7 +11,11 @@ import json
 import io
 import struct
 import time
+import hashlib, hmac
+import random
 
+
+TWO_MINUTES = 120
 
 # look up and return the key for a user.
 # "production" version should read from a file.
@@ -23,7 +27,26 @@ def get_key(user):
 # check the pin for +/- 120 seconds from current time
 def check_pin(user, pin):
     # code to check the user/pin combination goes here
-    return True
+    time_now_s = int(time.time()) # get the time since epoch in seconds
+    print(time_now_s)
+    identifier = 123456 # TODO change this to get the identifier randomly
+
+    for time_i in range(time_now_s-TWO_MINUTES, time_now_s+TWO_MINUTES):
+        msg = str(time_i ^ identifier) # create the message (time + identifier)
+
+        # hash the message using the user's secret key
+        h = hmac.new(
+            get_key(user).encode('utf-8'),
+            msg.encode('utf-8'),
+            hashlib.sha256
+        )
+
+        # if the hash is equal to the pin for any time in the window,
+        # return true
+        if h.hexdigest() == pin:
+            return True
+    
+    return False
 
 
 class Message:
