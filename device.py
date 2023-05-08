@@ -4,17 +4,46 @@
 import time
 import hashlib, hmac
 
+import deviceutils
+
 
 # {"user" : key} (these are entered into the table the first time the 
 # user logs in with their account on the device)
 SECRET_KEY_TABLE = {} 
 
+# host/port info for the validation server.
+# fixed here
+# production version could read from file, user input, or scanned QR code
+HOST = "127.0.0.1"
+PORT = 65432
 
-def generate_pin(identifier, user):
+# functions to get user and key info
+# fixed returns for this version
+# production version could select user via input or QR code
+# and key from stored key(s)
+def get_user():
+    return "test_user"
+
+
+def get_key():
+    return "test_key"
+
+
+# function to return an identifier
+# for testing, using a fixed value
+# for production, prompt for user entry or use command line
+def get_identifier():
+    # return 123456
+    val = int(input("Enter identifier: "))
+    return val
+
+    
+# alternate version using 
+def generate_pin(identifier):
     time_s = int(time.time()) # get the time since epoch in seconds
     msg = str(time_s ^ identifier)
     h = hmac.new(
-        SECRET_KEY_TABLE[user].encode('utf-8'), 
+        get_key().encode('utf-8'), 
         msg.encode('utf-8'), 
         hashlib.sha256
     )
@@ -22,16 +51,11 @@ def generate_pin(identifier, user):
 
 
 def main():
-    user = "zfg@uoregon.edu" # this will be received from the server
-    key = "test key" # this will be in the SECRET_KEY_TABLE associated with user
-
-    SECRET_KEY_TABLE[user] = key
-
-    identifier = 123456 # this will be received from the server
-
-    hexdigest = generate_pin(identifier, user) # the hex digest will be sent back to the server for verification
-
-    print(hexdigest)
+    id = get_identifier()
+    user = get_user()
+    pin = generate_pin(id)
+    # print("Generated PIN: ", pin)
+    deviceutils.send_message(HOST, PORT, user, pin)
 
 
 if __name__ == "__main__":
