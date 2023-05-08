@@ -41,6 +41,7 @@ def get_identifier():
 # alternate version using 
 def generate_pin(identifier):
     time_s = int(time.time()) # get the time since epoch in seconds
+    # print(time_s)
     msg = str(time_s ^ identifier)
     h = hmac.new(
         get_key().encode('utf-8'), 
