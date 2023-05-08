@@ -24,12 +24,22 @@ def get_key(user):
     return "test_key"
 
 
+# generate a random 6-digit identifier
+def generate_identifier():
+    return random.randint(100_000, 999_999)
+
+
+def get_identifier(user):
+    # TODO
+    return 123456
+
+
 # check the pin for +/- 120 seconds from current time
 def check_pin(user, pin):
     # code to check the user/pin combination goes here
     time_now_s = int(time.time()) # get the time since epoch in seconds
     print(time_now_s)
-    identifier = 123456 # TODO change this to get the identifier randomly
+    identifier = get_identifier(user)
 
     for time_i in range(time_now_s-TWO_MINUTES, time_now_s+TWO_MINUTES):
         msg = str(time_i ^ identifier) # create the message (time + identifier)
