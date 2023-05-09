@@ -15,7 +15,7 @@ import hashlib, hmac
 import random
 
 
-TWO_MINUTES = 120
+TIME_SLICE = 30 # a time slice is 30 seconds as defined in the 2d-2fa paper
 
 # look up and return the key for a user.
 # "production" version should read from a file.
@@ -34,14 +34,14 @@ def get_identifier(user):
     return 123456
 
 
-# check the pin for +/- 120 seconds from current time
+# check the pin for +/- 2 time slices from current time (+/- 60s)
 def check_pin(user, pin):
     # code to check the user/pin combination goes here
     time_now_s = int(time.time()) # get the time since epoch in seconds
     print(time_now_s)
     identifier = get_identifier(user)
 
-    for time_i in range(time_now_s-TWO_MINUTES, time_now_s+TWO_MINUTES):
+    for time_i in range(time_now_s-2*TIME_SLICE, time_now_s+2*TIME_SLICE):
         msg = str(time_i ^ identifier) # create the message (time + identifier)
 
         # hash the message using the user's secret key
