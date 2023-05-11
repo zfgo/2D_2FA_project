@@ -152,6 +152,29 @@ plan on deploying this software to arbitrary devices.
 
 \section{Related Work}
 
+Some related work and existing knowledge that we have used has mostly
+been to understand the basics of the implementation of the 2D-2FA
+presented in the paper. For example, when implementing the
+device--server communications, Doug used online
+resources\footnote{\href{https://realpython.com/python-sockets/}{\texttt{https://realpython.com/python-sockets/}}}
+to help figure out these communications.
+
+Zane worked on the hashing functionality, and for this he needed to
+understand HMAC (hash-based message authentication code) to create a
+hash of the identifier and the timestamp using the user's secret key as
+the HMAC key. For this, he consulted the Wikipedia
+page\footnote{\href{https://en.wikipedia.org/wiki/HMAC}{\texttt{https://en.wikipedia.org/wiki/HMAC}}}
+to get a basic understanding, as well as Python's standard libraries for
+hashing\footnote{\href{https://docs.python.org/3/library/hashlib.html}{\texttt{https://docs.python.org/3/library/hashlib.html}}}
+and message
+authentication.\footnote{\href{https://docs.python.org/3/library/hmac.html}{\texttt{https://docs.python.org/3/library/hmac.html}}}
+
+Other than these outside sources, we have not needed to consult any
+additional research cited by Shirvanian and Agrawal, nor have we needed
+to find any further papers ourselves. Should we need to do additional
+research as we continue our progress on this project, we will be sure to
+include references to that material in our final report. 
+
 \section{Current Progress}
 
 So far, we have been meeting once a week to discuss our project, what we
@@ -163,9 +186,11 @@ complete.
 
 As of 2023-05-09, we have implemented a rough outline of the device and
 the server such that they can communicate, as well as the basic 2D-2FA
-functionality. 
-
-TODO: add some more details about what we have done
+functionality. Specifically, we have implemented the basic 2D-2FA
+functionality of the device and the server. These two pieces of code
+communicate, and a test identifier correctly grants authorization to a
+test user with a fake secret key. 
+% add some more details about what we have done
 
 \section{Lessons}
 
@@ -198,6 +223,17 @@ register, and our software can authenticate previously-registered users.
 Next, we will implement functionality so that the device and the server
 to be able to function across different machines. 
 
-\section{References}
+More specifically, our ``To-Do'' list contains the following items:
+\begin{itemize}
+    \item 2D-2FA functionality for multiple users.
+    \item 2D-2FA functionality across multiple device.
+    \item Create test cases.
+    \item More in-depth documentation.
+    \item Final report, presentation, and poster.
+\end{itemize}
+The items that we will be completing next will be first two on the above
+list. 
+
+% \section{References}
 
 \end{document}
