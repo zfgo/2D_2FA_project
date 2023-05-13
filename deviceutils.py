@@ -16,6 +16,10 @@ import struct
 sel = selectors.DefaultSelector()
 
 
+# set 1 to show connection and message info, 0 to hide
+DEBUG = 0
+
+
 def create_request(user, pin):
     return dict(
         type="text/json",
@@ -26,7 +30,8 @@ def create_request(user, pin):
 
 def start_connection(host, port, request):
     addr = (host, port)
-    print(f"Starting connection to {addr}")
+    if DEBUG == 1:
+        print(f"Starting connection to {addr}")
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setblocking(False)
     sock.connect_ex(addr)
@@ -100,7 +105,8 @@ class Message:
 
     def _write(self):
         if self._send_buffer:
-            print(f"Sending {self._send_buffer!r} to {self.addr}")
+            if DEBUG == 1:
+                print(f"Sending {self._send_buffer!r} to {self.addr}")
             try:
                 # Should be ready to write
                 sent = self.sock.send(self._send_buffer)
@@ -176,7 +182,8 @@ class Message:
                 self._set_selector_events_mask("r")
 
     def close(self):
-        print(f"Closing connection to {self.addr}")
+        if DEBUG == 1:
+            print(f"Closing connection to {self.addr}")
         try:
             self.selector.unregister(self.sock)
         except Exception as e:
@@ -246,15 +253,17 @@ class Message:
         if self.jsonheader["content-type"] == "text/json":
             encoding = self.jsonheader["content-encoding"]
             self.response = self._json_decode(data, encoding)
-            print(f"Received response {self.response!r} from {self.addr}")
+            if DEBUG == 1:
+                print(f"Received response {self.response!r} from {self.addr}")
             self._process_response_json_content()
         else:
             # Binary or unknown content-type
             self.response = data
-            print(
-                f"Received {self.jsonheader['content-type']} "
-                f"response from {self.addr}"
-            )
+            if DEBUG == 1:
+                print(
+                    f"Received {self.jsonheader['content-type']} "
+                    f"response from {self.addr}"
+                )
             self._process_response_binary_content()
         # Close when response has been processed
         self.close()

@@ -11,19 +11,66 @@ import json
 import io
 import struct
 import time
+import hashlib, hmac
+import random
 
+
+# set 1 to show connection and message info, 0 to hide
+DEBUG = 0
+
+
+TIME_SLICE = 30 # a time slice is 30 seconds as defined in the 2d-2fa paper
 
 # look up and return the key for a user.
 # "production" version should read from a file.
 # test and proof-of-conecpt version can probably just use a dictionary defined here.
-def get_key(user):
-    return "test_key"
+def get_key(user, keys):
+    #return "test_key"
+    k = keys.get(user)
+    return k
 
 
-# check the pin for +/- 120 seconds from current time
-def check_pin(user, pin):
+# generate a random 6-digit identifier
+def generate_identifier():
+    return random.randint(100_000, 999_999)
+
+
+def get_identifier(user, ident):
+    # TODO
+    id = ident.get(user)
+    return id[0]
+    #return 123456
+
+
+# check the pin for +/- 2 time slices from current time (+/- 60s)
+def check_pin(user, pin, ident, keys):
     # code to check the user/pin combination goes here
-    return True
+    time_now_s = int(time.time()) # get the time since epoch in seconds
+    if DEBUG == 1:
+        print("Current time: ", time_now_s)
+    identifier = get_identifier(user, ident)
+    if identifier == None:
+        return False
+    key = get_key(user, keys)
+    if key == None:
+        return False
+
+    for time_i in range(time_now_s-2*TIME_SLICE, time_now_s+2*TIME_SLICE):
+        msg = str(time_i ^ identifier) # create the message (time + identifier)
+
+        # hash the message using the user's secret key
+        h = hmac.new(
+            key.encode('utf-8'),
+            msg.encode('utf-8'),
+            hashlib.sha256
+        )
+
+        # if the hash is equal to the pin for any time in the window,
+        # return true
+        if h.hexdigest() == pin:
+            return True
+    
+    return False
 
 
 class Message:
@@ -65,7 +112,8 @@ class Message:
 
     def _write(self):
         if self._send_buffer:
-            print(f"Sending {self._send_buffer!r} to {self.addr}")
+            if DEBUG == 1:
+                print(f"Sending {self._send_buffer!r} to {self.addr}")
             try:
                 # Should be ready to write
                 sent = self.sock.send(self._send_buffer)
@@ -103,7 +151,7 @@ class Message:
         message = message_hdr + jsonheader_bytes + content_bytes
         return message
 
-    def _create_response_json_content(self, auth):
+    def _create_response_json_content(self, auth, ident, keys):
         # rewrite, "user" insted of "action"
         # check first that "user" and "pin" exist, abort if not
         action = self.request.get("action")
@@ -112,7 +160,7 @@ class Message:
             user = self.request.get("user")
             pin = self.request.get("pin")
             content = {}
-            if (check_pin(user, pin)):
+            if (check_pin(user, pin, ident, keys)):
                 # PIN is good!
                 time_s = int(time.time())
                 auth.update({user: time_s})
@@ -138,11 +186,11 @@ class Message:
         }
         return response
 
-    def process_events(self, mask, auth):
+    def process_events(self, mask, auth, ident, keys):
         if mask & selectors.EVENT_READ:
             self.read()
         if mask & selectors.EVENT_WRITE:
-            self.write(auth)
+            self.write(auth, ident, keys)
 
     def read(self):
         self._read()
@@ -158,15 +206,16 @@ class Message:
             if self.request is None:
                 self.process_request()
 
-    def write(self, auth):
+    def write(self, auth, ident, keys):
         if self.request:
             if not self.response_created:
-                self.create_response(auth)
+                self.create_response(auth, ident, keys)
 
         self._write()
 
     def close(self):
-        print(f"Closing connection to {self.addr}")
+        if DEBUG == 1:
+            print(f"Closing connection to {self.addr}")
         try:
             self.selector.unregister(self.sock)
         except Exception as e:
@@ -216,19 +265,21 @@ class Message:
         if self.jsonheader["content-type"] == "text/json":
             encoding = self.jsonheader["content-encoding"]
             self.request = self._json_decode(data, encoding)
-            print(f"Received request {self.request!r} from {self.addr}")
+            if DEBUG == 1:
+                print(f"Received request {self.request!r} from {self.addr}")
         else:
             # Binary or unknown content-type
             self.request = data
-            print(
-                f"Received invalid message from {self.addr}"
-            )
+            if DEBUG == 1:
+                print(
+                    f"Received invalid message from {self.addr}"
+                )
         # Set selector to listen for write events, we're done reading.
         self._set_selector_events_mask("w")
 
-    def create_response(self, auth):
+    def create_response(self, auth, ident, keys):
         if self.jsonheader["content-type"] == "text/json":
-            response = self._create_response_json_content(auth)
+            response = self._create_response_json_content(auth, ident, keys)
         else:
             # Binary or unknown content-type
             response = self._create_response_binary_content()
