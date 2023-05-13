@@ -24,7 +24,8 @@ PORT = 65432
 def get_user():
     return "test_user"
 
-
+# gets the key for this device (single user)
+# production version would probably read this from disk
 def get_key():
     return "test_key"
 
@@ -37,7 +38,17 @@ def get_identifier():
     val = int(input("Enter identifier: "))
     return val
 
-    
+
+def set_host():
+    h = input("Enter host address: ")
+    return h
+
+
+def set_port():
+    p = int(input("Enter port number: "))
+    return p
+
+
 # alternate version using 
 def generate_pin(identifier):
     time_s = int(time.time()) # get the time since epoch in seconds
@@ -52,11 +63,15 @@ def generate_pin(identifier):
 
 
 def main():
+    host = set_host()
+    # print("Host set to: ", host)
+    port = set_port()
     id = get_identifier()
     user = get_user()
     pin = generate_pin(id)
     # print("Generated PIN: ", pin)
-    deviceutils.send_message(HOST, PORT, user, pin)
+    # deviceutils.send_message(HOST, PORT, user, pin)
+    deviceutils.send_message(host, port, user, pin)
 
 
 if __name__ == "__main__":
