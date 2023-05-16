@@ -66,7 +66,7 @@ def timeout_id():
     with lock:
         for y in ident.copy():
             if ident[y][1] < expire:
-                ident.pop(x)
+                ident.pop(y)
 
 
 def accept_wrapper(sock):
@@ -120,7 +120,7 @@ def user_ident_thread():
             newid = serverutils.generate_identifier()
             newtime = int(time.time())
             ident.update({val: [newid, newtime]})
-            print("Identifier for ", val, ": ", newid)
+            print(f"Identifier for {val}: {ident[val][0]:06d}")
 
 
 def main():
