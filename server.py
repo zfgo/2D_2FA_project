@@ -123,34 +123,39 @@ def user_ident_thread():
             print("Identifier for ", val, ": ", newid)
 
 
-if len(sys.argv) != 3:
-    print(f"Usage: {sys.argv[0]} <host> <port>")
-    sys.exit(1)
+def main():
+    if len(sys.argv) != 3:
+        print(f"Usage: {sys.argv[0]} <host> <port>")
+        sys.exit(1)
 
-host, port = sys.argv[1], int(sys.argv[2])
-lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# Avoid bind() exception: OSError: [Errno 48] Address already in use
-lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-try:
-    lsock.bind((host, port))
-except socket.error as msg:
-    print("Socket binding error: " + str(msg) + "\n")
-    sys.exit("Exiting")
-lsock.listen()
-print(f"Listening on {(host, port)}")
-lsock.setblocking(False)
-sel.register(lsock, selectors.EVENT_READ, data=None)
+    host, port = sys.argv[1], int(sys.argv[2])
+    lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # Avoid bind() exception: OSError: [Errno 48] Address already in use
+    lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    try:
+        lsock.bind((host, port))
+    except socket.error as msg:
+        print("Socket binding error: " + str(msg) + "\n")
+        sys.exit("Exiting")
+    lsock.listen()
+    print(f"Listening on {(host, port)}")
+    lsock.setblocking(False)
+    sel.register(lsock, selectors.EVENT_READ, data=None)
 
 
-try:
-    # auth_listen()
-    t1 = threading.Thread(target=auth_listen)
-    t2 = threading.Thread(target=user_ident_thread)
-    t1.start()
-    t2.start()
-    t1.join()
-    t2.join()
-except KeyboardInterrupt:
-    print("Caught keyboard interrupt, exiting")
-finally:
-    sel.close()
+    try:
+        # auth_listen()
+        t1 = threading.Thread(target=auth_listen)
+        t2 = threading.Thread(target=user_ident_thread)
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
+    except KeyboardInterrupt:
+        print("Caught keyboard interrupt, exiting")
+    finally:
+        sel.close()
+
+
+if __name__ == "__main__":
+    main()
