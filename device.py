@@ -7,9 +7,14 @@ import hashlib, hmac
 import deviceutils
 
 
+# set True to show connection and message info, False to hide
+DEBUG = False
+
 # {"user" : key} (these are entered into the table the first time the 
 # user logs in with their account on the device)
 SECRET_KEY_TABLE = {} 
+
+TIME_SLICE = 30 # a time slice is 30s as defined in the 2d-2fa paper
 
 # host/port info for the validation server.
 # fixed here
@@ -49,16 +54,22 @@ def set_port():
     return p
 
 
-# alternate version using 
 def generate_pin(identifier):
     time_s = int(time.time()) # get the time since epoch in seconds
-    # print(time_s)
-    msg = str(time_s ^ identifier)
+    time_slice = time_s // TIME_SLICE # get the time, divide to get current slice
+    
+    if DEBUG:
+        print(f"Current time: {time_s}; Time slice: {time_slice}")
+
+    msg = str(time_slice ^ identifier)
+    key = get_key()
+
     h = hmac.new(
-        get_key().encode('utf-8'), 
+        key.encode('utf-8'), 
         msg.encode('utf-8'), 
         hashlib.sha256
     )
+
     return h.hexdigest()
 
 

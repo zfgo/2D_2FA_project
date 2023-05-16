@@ -43,8 +43,9 @@ def get_identifier(user, ident):
 def check_pin(user, pin, ident, keys):
     # code to check the user/pin combination goes here
     time_now_s = int(time.time()) # get the time since epoch in seconds
+    time_slice = time_now_s // TIME_SLICE # get the time, divide into slices
     if DEBUG:
-        print(f"Current time: {time_now_s}s")
+        print(f"Current time: {time_now_s}s; Time slice: {time_slice}")
     identifier = get_identifier(user, ident)
 
     if identifier is None:
@@ -54,7 +55,7 @@ def check_pin(user, pin, ident, keys):
     if key is None:
         return False
 
-    for time_i in range(time_now_s-2*TIME_SLICE, time_now_s+2*TIME_SLICE):
+    for time_i in range(time_slice-2, time_slice+3): # current time slice +/- two slices (add three to upper end bc of range's indexing)
         msg = str(time_i ^ identifier) # create the message (time + identifier)
 
         # hash the message using the user's secret key
