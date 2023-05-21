@@ -18,7 +18,7 @@ import serverutils
 lock = RLock()
 
 # set to True to show connection and message info, False to hide
-DEBUG = False
+DEBUG = True
 
 # how long an authorization is good for, in seconds
 AUTH_TIMEOUT = 120
@@ -134,6 +134,7 @@ def main():
     lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
         lsock.bind((host, port))
+        #lsock.bind(("", port))
     except socket.error as msg:
         print("Socket binding error: " + str(msg) + "\n")
         sys.exit("Exiting")

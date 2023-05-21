@@ -76,10 +76,15 @@ def send_message(host, port, user, pin):
     """
     request = create_request(user, pin)
     start_connection(host, port, request)
+    
+    if DEBUG:
+        print("Connection established, sending request.")
 
     try:
         while True:
             events = sel.select(timeout=1)
+            if DEBUG:
+                print("Events: ", events)
 
             # for each message, attempt to send it over the network
             for key, mask in events:
@@ -145,7 +150,7 @@ class Message:
         self._request_queued = False
         self._jsonheader_len = None
         self.jsonheader = None
-        self.esponse = None
+        self.response = None
 
     def _set_selector_events_mask(self, mode):
         """

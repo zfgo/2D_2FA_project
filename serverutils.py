@@ -36,6 +36,8 @@ def generate_identifier():
 
 def get_identifier(user, ident):
     id = ident.get(user)
+    if id is None:
+        return None
     return id[0]
 
 
