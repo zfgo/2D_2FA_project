@@ -1,7 +1,8 @@
 """
 2D2FA Device Utilities
 
-TODO
+Utility functions for the device involving the socket connections and
+creating and sending a message to the server over the network.
 
 created 2023-05-05 by Doug Ure
 

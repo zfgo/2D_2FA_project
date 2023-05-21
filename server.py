@@ -1,8 +1,10 @@
-# 2D2FA Server Code
-# created 2023-05-05 by Doug Ure
+"""
+2D2FA Server Code
+created 2023-05-05 by Doug Ure
 
-# TCP connection and messaging code modified from:
-# https://realpython.com/python-sockets/
+TCP connection and messaging code modified from:
+https://realpython.com/python-sockets/
+"""
 
 
 import sys
