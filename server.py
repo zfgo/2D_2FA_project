@@ -42,8 +42,9 @@ sel = selectors.DefaultSelector()
 # "keys" list: maps users to secret keys
 # for testing purposes, is populated here
 # for production, likely would need to populate this by reading from file on startup
-keys = {}
-keys.update({"test_user": "test_key"})
+#keys = {}
+#keys.update({"test_user": "test_key"})
+keys = serverutils.get_keys()
 
 # "authorized" list: maps username to time of authorization
 auth = {}
@@ -123,6 +124,8 @@ def user_ident_thread():
             newtime = int(time.time())
             ident.update({val: [newid, newtime]})
             print(f"Identifier for {val}: {ident[val][0]:06d}")
+            if DEBUG:
+                print("Ident list: ", ident)
 
 
 def main():
@@ -130,6 +133,9 @@ def main():
         print(f"Usage: {sys.argv[0]} <host> <port>")
         sys.exit(1)
 
+    if DEBUG:
+        print("Got keys: ", keys)
+        print("test_user's key: ", keys["test_user"])
     host, port = sys.argv[1], int(sys.argv[2])
     lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # Avoid bind() exception: OSError: [Errno 48] Address already in use

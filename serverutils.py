@@ -18,9 +18,18 @@ import random
 
 
 # set True to show connection and message info, False to hide
-DEBUG = False
+DEBUG = True
 
 TIME_SLICE = 30 # a time slice is 30 seconds as defined in the 2d-2fa paper
+
+def get_keys():
+    """
+    Read a file containing a json mapping users to keys
+    """
+    f = open('server_user_list.txt')
+    for line in f:
+        dat = json.loads(line)
+        return dat
 
 def get_key(user, keys):
     """
@@ -62,13 +71,20 @@ def check_pin(user, pin, ident, keys):
     time_now_s = int(time.time()) # get the time since epoch in seconds
     time_slice = time_now_s // TIME_SLICE # get the time, divide into slices
     if DEBUG:
+        print("Checking PIN")
         print(f"Current time: {time_now_s}s; Time slice: {time_slice}")
     identifier = get_identifier(user, ident)
+    if DEBUG:
+        print("Keys: ", keys)
+        print("Ident: ", ident)
+        print(f"Using identifier for {user}: {identifier}")
 
     if identifier is None:
         return False
     
     key = get_key(user, keys)
+    if DEBUG:
+        print("Using key: ", key)
     if key is None:
         return False
 
@@ -226,6 +242,8 @@ class Message:
         if (( "user" in self.request.keys() ) and ( "pin" in self.request.keys() )):
             # check pin/key
             user = self.request.get("user")
+            if DEBUG:
+                print("In create_response, user = ", user)
             pin = self.request.get("pin")
             content = {}
             if (check_pin(user, pin, ident, keys)):

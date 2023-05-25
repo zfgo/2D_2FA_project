@@ -1,0 +1,3 @@
+{ "hostname": "Local", "address": "localhost", "port": 65432, "user": "test_user", "key": "test_key" }
+{ "hostname": "Spaceball One", "address": "localhost", "port": 65432, "user": "super_skroob", "key": "12345" }
+{ "hostname": "Nuclear Launch Control", "address": "localhost", "port": 65432, "user": "kane", "key": "1995" }
