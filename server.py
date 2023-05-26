@@ -15,7 +15,11 @@ import time
 import threading
 from threading import Thread, RLock
 import serverutils
+import flask
+from flask import Flask, redirect, url_for, request
 
+
+app = Flask(__name__)
 
 lock = RLock()
 
@@ -52,6 +56,82 @@ auth = {}
 # "identifier" list: maps username to an array containing an identifier and timeout
 # { username : [identifier, timeout]
 ident = {}
+
+
+"""
+================
+APIs
+================
+"""
+
+@app.route('/index')
+def index():
+    print("Index called")
+    r = name_request_text()
+    r += '</body></html>'
+    print("Index response: ", r)
+    return r
+
+
+@app.route('/checkname', methods = ["POST", "GET"])
+def checkname():
+    print("Checkname called")
+    if request.method == "POST":
+        target_name = request.form["username"]
+    else:
+        target_name = request.args.get("username")
+    r = name_request_text()
+    if target_name not in keys.keys():
+        r += '<p style="color: #FF0000">User ' + target_name + ' not found</p>'
+    else:
+        # user exists, state if they are authenticated
+        if target_name in auth.keys():
+            r+= '<p style="color: #00FF00">User ' + target_name + ' is authorized</p>'
+        else:
+            r+= '<p style="color: #FF0000">User ' + target_name + ' is not authorized</p>'
+        # get an identifier
+        expire = int(time.time()) - IDENT_TIMEOUT + MIN_TIME
+        with lock:
+            r_id = 0
+            # first check if identifier exists
+            if target_name in ident.keys():
+                #check it hasn't expired, generate new 
+                if ident[target_name][1] > expire:
+                    r_id = ident[target_name][0]
+                else:
+                    r_id = make_new_key(target_name)
+            else:
+                r_id = make_new_key(target_name)
+        r += '<p style="font-size:24px; ">' + str(r_id).zfill(6) + '</p>'
+    r += '</body></html>'
+    print("Checkname response: ", r)
+    return r
+        
+
+
+"""
+================
+Code
+================
+"""
+
+
+def make_new_key(uname):
+    nid = serverutils.generate_identifier()
+    newtime = int(time.time())
+    ident.update({uname: [nid, newtime]})
+    return nid
+
+
+def name_request_text():
+    """
+    function generates the opening text common to all HTML replies
+    """
+    resp = '<html><body><form action="checkname" mothod="POST">'
+    resp += '<label>Input user name: </label>'
+    resp += '<input type="text" name="username">'
+    resp += '<input type="submit" value="submit" name="submit"></form>'
+    return resp
 
 
 def timeout_auth():
@@ -102,7 +182,7 @@ def auth_listen():
         # print("Tick!")
         timeout_auth()
 
-
+"""
 def user_ident_thread():
     while True:
         val = input("Enter user name: ")
@@ -126,6 +206,11 @@ def user_ident_thread():
             print(f"Identifier for {val}: {ident[val][0]:06d}")
             if DEBUG:
                 print("Ident list: ", ident)
+"""
+
+def user_ident_thread():
+    app.debug = False
+    app.run(port = 5001)
 
 
 def main():
@@ -158,8 +243,10 @@ def main():
         t2 = threading.Thread(target=user_ident_thread)
         t1.start()
         t2.start()
+        #app.debug = True
+        #app.run()
         t1.join()
-        t2.join()
+       #t2.join()
     except KeyboardInterrupt:
         print("Caught keyboard interrupt, exiting")
     finally:
