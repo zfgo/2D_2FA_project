@@ -1,6 +1,12 @@
 """
 2D2FA Server Code
+
+Functions to run the server, check if the identifier or the user's
+authentication has timed out, and generate a simple HTML interface for
+the user using Flask.
+
 created 2023-05-05 by Doug Ure
+2023-05-28 Zane Globus-O'Harra add docstrings
 
 TCP connection and messaging code modified from:
 https://realpython.com/python-sockets/
@@ -19,8 +25,10 @@ import flask
 from flask import Flask, redirect, url_for, request
 
 
+# the Flask app instance
 app = Flask(__name__)
 
+# lock used by the auth_listen thread
 lock = RLock()
 
 # set to True to show connection and message info, False to hide
@@ -46,8 +54,8 @@ sel = selectors.DefaultSelector()
 # "keys" list: maps users to secret keys
 # for testing purposes, is populated here
 # for production, likely would need to populate this by reading from file on startup
-#keys = {}
-#keys.update({"test_user": "test_key"})
+# keys = {}
+# keys.update({"test_user": "test_key"})
 keys = serverutils.get_keys()
 
 # "authorized" list: maps username to time of authorization
@@ -66,6 +74,10 @@ APIs
 
 @app.route('/index')
 def index():
+    """
+    generate HTML for the index, call the code to get the drop down menu
+    for user selection
+    """
     print("Index called")
     r = name_request_text()
     r += '</body></html>'
@@ -75,6 +87,10 @@ def index():
 
 @app.route('/checkname', methods = ["POST", "GET"])
 def checkname():
+    """
+    generate the html code for the 'checkname' form in the client-side
+    web form. 
+    """
     print("Checkname called")
     if request.method == "POST":
         target_name = request.form["username"]
@@ -95,7 +111,7 @@ def checkname():
             r_id = 0
             # first check if identifier exists
             if target_name in ident.keys():
-                #check it hasn't expired, generate new 
+                # check it hasn't expired, generate new
                 if ident[target_name][1] > expire:
                     r_id = ident[target_name][0]
                 else:
@@ -106,7 +122,6 @@ def checkname():
     r += '</body></html>'
     print("Checkname response: ", r)
     return r
-        
 
 
 """
@@ -115,8 +130,11 @@ Code
 ================
 """
 
-
 def make_new_key(uname):
+    """
+    add the identifier and the time that identifier was generated to the 
+    identifiers dictionary, 
+    """
     nid = serverutils.generate_identifier()
     newtime = int(time.time())
     ident.update({uname: [nid, newtime]})
@@ -125,7 +143,8 @@ def make_new_key(uname):
 
 def name_request_text():
     """
-    function generates the opening text common to all HTML replies
+    function generates the opening text common to all HTML replies: a
+    drop down form where the user selects who they are logging in as.
     """
     resp = '<html><body><form action="checkname" mothod="POST">'
     resp += '<label>Input user name: </label>'
@@ -135,6 +154,13 @@ def name_request_text():
 
 
 def timeout_auth():
+    """
+    determine how long a user is authorized for after submitting a valid
+    PIN. Separated from `timeout_id()` to allow for different expiration
+    times (e.g., we could allow identifiers to be valid for 30 seconds,
+    and allow authorizing the user's logins for the next 5 minutes,
+    etc.)
+    """
     expire = int(time.time()) - AUTH_TIMEOUT
     with lock:
         for x in auth.copy():
@@ -145,6 +171,11 @@ def timeout_auth():
 
 
 def timeout_id():
+    """
+    Time out an identifier after two minutes. This effectively gives 
+    each identifier an expiration time, and renders them useless once 
+    the timer expires, requiring the user to request a new identifier.
+    """
     expire = int(time.time()) - IDENT_TIMEOUT
     with lock:
         for y in ident.copy():
@@ -153,6 +184,10 @@ def timeout_id():
 
 
 def accept_wrapper(sock):
+    """
+    Accept the socket connection from the device, get the message, and
+    register it with the selector
+    """
     conn, addr = sock.accept()  # Should be ready to read
     if DEBUG:
         print(f"Accepted connection from {addr}")
@@ -162,6 +197,10 @@ def accept_wrapper(sock):
 
 
 def auth_listen():
+    """
+    thread that listens for user authentication, and calls to process a
+    message's events.
+    """
     while True:
         events = sel.select(timeout=TICK)
         for key, mask in events:
@@ -208,7 +247,12 @@ def user_ident_thread():
                 print("Ident list: ", ident)
 """
 
+
 def user_ident_thread():
+    """
+    thread that runs the Flask app (aka the User Identification Thread)
+    which generates an identifier, and sends that identifier to the user
+    """
     app.debug = False
     app.run(port = 5001)
 
@@ -227,7 +271,7 @@ def main():
     lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
         lsock.bind((host, port))
-        #lsock.bind(("", port))
+        # sock.bind(("", port))
     except socket.error as msg:
         print("Socket binding error: " + str(msg) + "\n")
         sys.exit("Exiting")
@@ -236,17 +280,16 @@ def main():
     lsock.setblocking(False)
     sel.register(lsock, selectors.EVENT_READ, data=None)
 
-
     try:
         # auth_listen()
         t1 = threading.Thread(target=auth_listen)
         t2 = threading.Thread(target=user_ident_thread)
         t1.start()
         t2.start()
-        #app.debug = True
-        #app.run()
+        # pp.debug = True
+        # pp.run()
         t1.join()
-       #t2.join()
+       # 2.join()
     except KeyboardInterrupt:
         print("Caught keyboard interrupt, exiting")
     finally:

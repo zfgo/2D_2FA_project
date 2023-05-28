@@ -1,6 +1,10 @@
 """
 2D2FA Server Utilities
+
+
+
 created 2023-05-05 by Doug Ure
+2023-05-28 Zane Globus-O'Harra add docstrings
 
 TCP connection and messaging code modified from:
 https://realpython.com/python-sockets/
@@ -264,6 +268,9 @@ class Message:
         return response
 
     def _create_response_binary_content(self):
+        """
+        Create a response using binary encoding
+        """
         response = {
             "content_bytes": b"First 10 bytes of request: "
             + self.request[:10],
@@ -363,6 +370,10 @@ class Message:
                     raise ValueError(f"Missing required header '{reqhdr}'.")
 
     def process_request(self):
+        """
+        When a request is received, decode the JSON header and the
+        request. Set `self.request` equal to the decoded data.
+        """
         content_len = self.jsonheader["content-length"]
         if not len(self._recv_buffer) >= content_len:
             return
@@ -384,6 +395,11 @@ class Message:
         self._set_selector_events_mask("w")
 
     def create_response(self, auth, ident, keys):
+        """
+        Create a response using the user's authentication, the
+        identifier, and the user's keys. Encode this as binary, and
+        enqueue it for sending.
+        """
         if self.jsonheader["content-type"] == "text/json":
             response = self._create_response_json_content(auth, ident, keys)
         else:
