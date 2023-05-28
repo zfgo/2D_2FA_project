@@ -5,10 +5,12 @@ Utility functions for the device involving the socket connections and
 creating and sending a message to the server over the network.
 
 created 2023-05-05 by Doug Ure
+2023-05-28 Zane Globus-O'Harra add docstrings
 
 TCP connection and messaging code modified from:
 https://realpython.com/python-sockets/
 """
+
 
 import sys
 import socket

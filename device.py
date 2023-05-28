@@ -7,7 +7,10 @@ a PIN based on the identifier, the current time, and using the user's
 secret key as the hash key. Send this PIN to the server for
 verification. 
 
+Also generate HTML for a simple browser interface.
+
 created 2023-04-27 by Zane Globus-O'Harra
+2023-05-28 Zane Globus-O'Harra add docstrings
 """
 
 import time
