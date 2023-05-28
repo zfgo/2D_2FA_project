@@ -18,7 +18,7 @@ import io
 import struct
 import time
 import hashlib, hmac
-import random
+from secrets import SystemRandom    # secure random generator
 
 
 # set True to show connection and message info, False to hide
@@ -49,9 +49,10 @@ def get_key(user, keys):
 def generate_identifier():
     """
     Generate a random 6-digit identifier that the user will input on the
-    device. If we want this to be secure, use the `secrets` library.
+    device. Use the `SystemRandom()` function from the secrets library
+    to get a secure random generator
     """
-    return random.randint(0, 999_999)
+    return SystemRandom().randbelow(1_000_000)
 
 
 def get_identifier(user, ident):
