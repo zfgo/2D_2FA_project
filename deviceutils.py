@@ -24,7 +24,7 @@ import struct
 sel = selectors.DefaultSelector()
 
 # set to True to show connection and message info, False to hide
-DEBUG = False
+DEBUG = True
 
 
 def create_request(user, pin):
@@ -88,7 +88,6 @@ def send_message(host, port, user, pin):
             events = sel.select(timeout=1)
             if DEBUG:
                 print("Events: ", events)
-
             # for each message, attempt to send it over the network
             for key, mask in events:
                 message = key.data
@@ -111,7 +110,8 @@ def send_message(host, port, user, pin):
 
     finally:
         # close the selector
-        sel.close()
+        # sel.close()
+        pass
 
 
 class Message:

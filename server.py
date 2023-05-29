@@ -223,6 +223,7 @@ def auth_listen():
 
 """
 def user_ident_thread():
+    # old version using the terminal instead of an HTML interface
     while True:
         val = input("Enter user name: ")
         if val not in keys.keys():
