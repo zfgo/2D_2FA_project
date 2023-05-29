@@ -26,7 +26,7 @@ app = Flask(__name__)
 
 
 # set True to show connection and message info, False to hide
-DEBUG = True
+DEBUG = False
 
 # {"user" : key} (these are entered into the table the first time the 
 # user logs in with their account on the device)

@@ -22,7 +22,7 @@ from secrets import SystemRandom    # secure random generator
 
 
 # set True to show connection and message info, False to hide
-DEBUG = True
+DEBUG = False
 
 TIME_SLICE = 30 # a time slice is 30 seconds as defined in the 2d-2fa paper
 

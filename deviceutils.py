@@ -24,7 +24,7 @@ import struct
 sel = selectors.DefaultSelector()
 
 # set to True to show connection and message info, False to hide
-DEBUG = True
+DEBUG = False
 
 
 def create_request(user, pin):
@@ -107,11 +107,6 @@ def send_message(host, port, user, pin):
     
     except KeyboardInterrupt:
         print("Caught keyboard interrupt, exiting")
-
-    finally:
-        # close the selector
-        # sel.close()
-        pass
 
 
 class Message:

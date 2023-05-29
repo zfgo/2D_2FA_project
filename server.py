@@ -32,7 +32,7 @@ app = Flask(__name__)
 lock = RLock()
 
 # set to True to show connection and message info, False to hide
-DEBUG = True
+DEBUG = False
 
 # how long an authorization is good for, in seconds
 AUTH_TIMEOUT = 120
