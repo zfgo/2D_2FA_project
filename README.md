@@ -96,4 +96,4 @@ After submitting an ID, you will be met with the folowing screen:
 
 ![PIN sent](docs/device_2.png)
 
-In a final production version, this screen could also show whether the authentication was successful or not (this information *is* currently sent in a reply from the server), but the simple HTML demo doesn't currently have the possibility, instead prompting the user to check on the server to see if they have been authenticated (see previous section). There are also links to change host and username, or to input a different identifier using the same host and username.
+In a final production version, this screen could also show whether the authentication was successful or not (this information *is* currently sent in a reply from the server), but the simple HTML demo doesn't currently have the possibility, instead prompting the user to check on the server to see if they have been authenticated (see previous section). There is also a link to change host and username.

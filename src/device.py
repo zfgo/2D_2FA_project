@@ -77,7 +77,7 @@ def do_auth():
     auth_process(ident)
     resp = '<html><body>PIN sent<br>Check login page'
     resp += '<br><a href="index">Select different host/user</a>'
-    resp += '<br><a href="enter_id">Input different identifier</a>'
+    # resp += '<br><a href="enter_id">Input different identifier</a>'
     resp += '</body></html>'
     return resp
 
