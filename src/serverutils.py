@@ -18,6 +18,7 @@ import io
 import struct
 import time
 import hashlib, hmac
+import secrets
 from secrets import SystemRandom    # secure random generator
 
 
@@ -52,7 +53,8 @@ def generate_identifier():
     device. Use the `SystemRandom()` function from the secrets library
     to get a secure random generator
     """
-    return SystemRandom().randbelow(1_000_000)
+    # return SystemRandom().randbelow(1_000_000)
+    return secrets.randbelow(1_000_000)
 
 
 def get_identifier(user, ident):
