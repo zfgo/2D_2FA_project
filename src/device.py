@@ -55,13 +55,14 @@ def index():
 
 @app.route('/enter_id', methods = ["POST"])
 def enter_id():
-    #return "Success?"
-    index = int(request.form["hostindex"])
-    #return ("Got index " + index)
-    id_process(index)
+    index = request.form["hostindex"]
+    print("enter_id index: ", index)
+    ind = int(index)
+    id_process(int(ind))
     resp = '<html><body><form action="do_auth" method="POST">'
     resp += '<label>Input identifier: </label>'
     resp += '<input type="text" name="ident">'
+    resp += '<input type="hidden" name="hostindex" value=' + index + '>'
     resp += '<input type="submit" value="submit" name="submit"></form>'
     #resp += '<br><form action="/index" method="GET"><input type="submit" value="return" name="return"'
     #resp += '</form></body></html>'
@@ -74,8 +75,13 @@ def enter_id():
 def do_auth():
     #return "Success?"
     ident = int(request.form["ident"])
+    index = request.form["hostindex"]
+    print("do_auth index: ", index)
     auth_process(ident)
     resp = '<html><body>PIN sent<br>Check login page'
+    resp += '<br><form action="enter_id" method="POST">'
+    resp += '<input type="hidden" name="hostindex" value=' + index + '>'
+    resp += '<input type="submit" value="enter new identifier" value="submit"></form>'
     resp += '<br><a href="index">Select different host/user</a>'
     # resp += '<br><a href="enter_id">Input different identifier</a>'
     resp += '</body></html>'
