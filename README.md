@@ -97,3 +97,13 @@ After submitting an ID, you will be met with the folowing screen:
 ![PIN sent](docs/device_2.png)
 
 In a final production version, this screen could also show whether the authentication was successful or not (this information *is* currently sent in a reply from the server), but the simple HTML demo doesn't currently have the possibility, instead prompting the user to check on the server to see if they have been authenticated (see previous section). There is also a button ("enter new identifier") in order to try a new identifier with the same host/username, and a link to change host and username.
+
+### Testing
+
+The "package" includes a test program, **test.py** in the **/src** folder. To run it, go to that folder in a terminal window and start the program by entering:
+
+	python3 test.py
+
+The test program will run a series of tests. For each test, it will print out what is being checked, and whether the test succeeded or failed.
+
+When done, the program will end by displaying how many tests have failed.

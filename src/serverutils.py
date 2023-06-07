@@ -107,6 +107,8 @@ def check_pin(user, pin, ident, keys):
 
         # if the hash is equal to the pin for any time in the window,
         # return true
+        if DEBUG:
+            print("Checking timeslice ", time_i, " PIN: ", h.hexdigest())
         if h.hexdigest() == pin:
             return True
     
