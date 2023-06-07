@@ -23,3 +23,82 @@
     location = {San Juan, PR, USA},
     series = {ACSAC '18}
 }
+
+
+@article{MFAProtocols,
+    author = {Jacomme, Charlie and Kremer, Steve},
+    title = {An Extensive Formal Analysis of Multi-Factor Authentication Protocols},
+    year = {2021},
+    issue_date = {May 2021},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    volume = {24},
+    number = {2},
+    issn = {2471-2566},
+    url = {https://doi.org/10.1145/3440712},
+    doi = {10.1145/3440712},
+    abstract = {Passwords are still the most widespread means for authenticating users, even though they have been shown to create huge security problems. This motivated the use of additional authentication mechanisms in so-called multi-factor authentication protocols. In this article, we define a detailed threat model for this kind of protocol: While in classical protocol analysis attackers control the communication network, we take into account that many communications are performed over TLS channels, that computers may be infected by different kinds of malware, that attackers could perform phishing, and that humans may omit some actions. We formalize this model in the applied pi calculus and perform an extensive analysis and comparison of several widely used protocols—variants of Google 2-step and FIDO’s U2F (Yubico’s Security Key token). The analysis is completely automated, generating systematically all combinations of threat scenarios for each of the protocols and using the PROVERIF tool for automated protocol analysis. To validate our model and attacks, we demonstrate their feasibility in practice, even though our experiments are run in a laboratory environment. Our analysis highlights weaknesses and strengths of the different protocols. It allows us to suggest several small modifications of the existing protocols that are easy to implement, as well as an extension of Google 2-step that improves security in several threat scenarios.},
+    journal = {ACM Trans. Priv. Secur.},
+    month = {Jan},
+    articleno = {13},
+    numpages = {34},
+    keywords = {multi-factor authentication, Formal methods, symbolic model, detailed threat models}
+}
+
+@misc{Saha2016, 
+    title={{NIST} Shouted, Who Listened? {A}nalyzing User Response to {NIST}'s Guidance on {SMS} {2FA} Security},
+    url={https://duo.com/blog/nist-shouted-who-listened-analyzing-user-response-to-nists-guidance-on-sms-2fa-security},
+    journal={Duo}, 
+    author={Saha, Mayank}, 
+    year={2016}, 
+    month={Dec}
+} 
+
+@inproceedings{ShoulderSurfingWild,
+    author = {Eiband, Malin and Khamis, Mohamed and von Zezschwitz, Emanuel and Hussmann, Heinrich and Alt, Florian},
+    title = {Understanding Shoulder Surfing in the Wild: Stories from Users and Observers},
+    year = {2017},
+    isbn = {9781450346559},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3025453.3025636},
+    doi = {10.1145/3025453.3025636},
+    abstract = {Research has brought forth a variety of authentication systems to mitigate observation attacks. However, there is little work about shoulder surfing situations in the real world. We present the results of a user survey (N=174) in which we investigate actual stories about shoulder surfing on mobile devices from both users and observers. Our analysis indicates that shoulder surfing mainly occurs in an opportunistic, non-malicious way. It usually does not have serious consequences, but evokes negative feelings for both parties, resulting in a variety of coping strategies. Observed data was personal in most cases and ranged from information about interests and hobbies to login data and intimate details about third persons and relationships. Thus, our work contributes evidence for shoulder surfing in the real world and informs implications for the design of privacy protection mechanisms.},
+    booktitle = {Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems},
+    pages = {4254--4265},
+    numpages = {12},
+    keywords = {privacy, shoulder surfing, mobile devices},
+    location = {Denver, Colorado, USA},
+    series = {CHI '17}
+}
+
+@article{ShoulderSurfingExperimental,
+	doi = {10.1016/j.ijhcs.2019.04.003},
+	url = {https://doi.org/10.1016%2Fj.ijhcs.2019.04.003},
+	year = 2019,
+	month = {Oct},
+	publisher = {Elsevier {BV}},
+	volume = {130},
+	pages = {1--20},
+	author = {Leon Bo{\v{s}}njak and Bo{\v{s}}tjan Brumen},
+	title = {Shoulder surfing: From an experimental study to a comparative framework},
+	journal = {International Journal of Human-Computer Studies}
+}
+
+@inproceedings{BypassingPush,
+    author = {Jubur, Mohammed and Shrestha, Prakash and Saxena, Nitesh and Prakash, Jay},
+    title = {Bypassing Push-Based Second Factor and Passwordless Authentication with Human-Indistinguishable Notifications},
+    year = {2021},
+    isbn = {9781450382878},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3433210.3453084},
+    doi = {10.1145/3433210.3453084},
+    abstract = {Second factor (2FA) or passwordless authentication based on notifications pushed to a user's personal device (e.g., a phone) that the user can simply approve (or deny) has become widely popular due to its convenience. In this paper, we show that the effortlessness of this approach gives rise to a fundamental design vulnerability. The vulnerability stems from the fact that the notification, as shown to the user, is not uniquely bound to the user's login session running through the browser, and thus if two notifications are sent around the same time (one for the user's session and one for an attacker's session), the user may not be able to distinguish between the two, likely ending up accepting the notification of the attacker's session.Exploiting this vulnerability, we present HIENA, a simple yet devastating attack against such "one-push" 2FA or passwordless schemes, which can allow a malicious actor to login soon after the victim user attempts to login triggering multiple near-concurrent notifications that seem indistinguishable to the user. To further deceive the user into accepting the attacker-triggered notification, HIENA can optionally spoof/mimic the victim's client machine information (e.g., the city from which the victim logs in, by being in the same city) and even issue other third-party notifications (e.g., email or social media) for obfuscation purposes. In case of 2FA schemes, we assume that the attacker knows the victim's password (e.g., obtained via breached password databases), a standard methodology to evaluate the security of any 2FA scheme. To evaluate the effectiveness of HIENA, we carefully designed and ran a human factors lab study where we tested benign and adversarial settings mimicking the user interface designs of well-known one-push 2FA and passwordless schemes. Our results show that users are prone to accepting attacker's notification in HIENA with high rates, about 83\% overall and about 99\% upon using spoofed information, which is almost similar to the rates of acceptance of benign login sessions. Even for the non-spoofed sessions (our primary attack), the attack success rates are about 68\%, which go up to about 90-97\% if the attack attempt is repeated 2-3 times. While we did not see a statistically significant effect of using third-party notifications on attack success rate, in real-life, the use of such obfuscation can be quite effective as users may only see one single 2FA notification (corresponding to attacker's session) on top of the notifications list which is most likely to be accepted. We have verified that many widely deployed one-push 2FA schemes (e.g., Duo Push, Authy OneTouch, LastPass, Facebook's and OpenOTP) seem directly vulnerable to our attack.},
+    booktitle = {Proceedings of the 2021 ACM Asia Conference on Computer and Communications Security},
+    pages = {447--461},
+    numpages = {15},
+    keywords = {security and privacy, multi-factor authentication, authentication, push-based two-factor authentication},
+    location = {Virtual Event, Hong Kong},
+    series = {ASIA CCS '21}
+}
