@@ -64,12 +64,13 @@ PIN. Hence the name ``2D-2FA,'' where the two factors are the password
 and the identifier, and the two dimensions are the identifier and the
 PIN. 
 
-In our project, we hope to implement the authentication phase of the
-2D-2FA system, following the implementation laid out in
-\cite{shirvanian2d2fa}. In doing this, we hope to learn more about
-multifactor authentication and network security, as well as verifying
-that the 2D-2FA system functions correctly and meets the design goals as
-described by Shirvanian and Agrawal. 
+In our project, implemented a bare-bones registration phase, and a
+fleshed out authentication phase of the 2D-2FA system, following the
+implementation laid out in \cite{shirvanian2d2fa}. In doing this, our
+hopes were to learn more about multifactor authentication and network
+security, as well as verifying that the 2D-2FA system functions
+correctly and meets the design goals as described by Shirvanian and
+Agrawal. 
 
 % when a user logs in with their username and password, a
 % unique identifier is displayed to them. The user then inputs
@@ -204,10 +205,23 @@ token-based authentication.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{2D-2FA}
 
+This section will describe the design goals of the 2D-2FA system, as
+well as going more in-depth into the processes that the system uses to
+securely authenticate users. We will also cover our implementation of
+the 2D-2FA system, and describe any differences and changes between our
+implementation and the implementation outlined in section 6 of
+\cite{shirvanian2d2fa}. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Design}
+
+2D-2FA was primarily designed to meet three usability and deployability
+goals as described by section 3.3.2 in \cite{shirvanian2d2fa}. These
+include ease of use, ease of integration, and universal compatibility.
+These goals are met by using a simple identifier that is easy to enter
+into the device, not using any third party services, and using standard,
+well-established technologies. 
 
 The 2D-2FA system consists of two phases, the registration phase and the
 authentication phase. In our project, we assumed that the registration
@@ -216,7 +230,7 @@ will go over that phase here because it would be required for the
 implementation of a full 2D-2FA system, rather than a toy example or
 proof of concept implementation.
 
-\paragraph{Registraion Phase}
+\paragraph{Registration Phase}
 During the registration phase, the parties involved in the 2D-2FA
 protocol need to establish communication channels between them, and
 share secret keys between the server and the device. 
