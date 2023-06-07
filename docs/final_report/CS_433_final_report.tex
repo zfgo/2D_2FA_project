@@ -183,7 +183,54 @@ token-based authentication.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Design}
 
+The 2D-2FA system consists of two phases, the registration phase and the
+authentication phase. In our project, we assumed that the registration
+phase had already been completed between the involved parties, but we
+will go over that phase here because it would be required for the
+implementation of a full 2D-2FA system, rather than a toy example or
+proof of concept implementation.
 
+\paragraph{Registraion Phase}
+During the registration phase, the parties involved in the 2D-2FA
+protocol need to establish communication channels between them, and
+share secret keys between the server and the device. 
+
+First, a user would register their username and password with the
+server. The server would pick a secret key for that user (generating it
+from their password using HMAC). The secret then needs to be transferred
+to the user's device (e.g., cell phone), which is typically done by
+manually entering it into the device, or by scanning a QR code generated
+by the server. This is so that the device will be able to generate PINs
+later on in the 2D-2FA process. 
+
+The server stores a hash of the user's password and secret key, and the
+device stores only the secret key related to the user's account stored
+on the server. The client (e.g., a web browser on a laptop that the user
+uses to log in to the server) does not store any information during the
+registration phase. 
+
+\paragraph{Authentication Phase}
+The authentication phase involves the interaction of the parties to
+authenticate the user to the server in a secure fashion. 
+
+First, the user attempts to log in to the server from the client. The
+user's login information (username and password) are used as the first
+authentication factor. Next, the server displays a unique identifier to
+the user through the client (the identifier can be implemented in a
+variety of ways, either via QR code, a fourgram pattern as described in
+section 6.1 of \cite{shirvanian2d2fa}, and so on). 
+
+On the user's device, the user selects the server that they are logging
+in to, and enters the identifier that was displayed to them on the
+client. The device generates a PIN using the identifier, the current
+time, and the user's secret key. The PIN and the identifier are sent to
+the server.
+
+When the server receives the PIN and the identifier, it authenticates
+the user's session associated with the identifier, generating several
+PINs to find one that matches with the time the PIN was generated on the
+user's device. During this phase, the server keeps a temporary record of
+all active sessions and identifiers.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Implementation}
@@ -193,7 +240,48 @@ token-based authentication.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Security}
 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
+There are several possible avenues of attack to the 2D-2FA system that
+are proposed in \cite{shirvanian2d2fa}. In this section, we will go over
+each attack vector and analyze how the system protects against these
+attacks. 
+
+\paragraph{Client Compromise}
+An attacker would need to compromise the client that the user uses to
+log into the server, and thus would learn the user's password. Even with
+the user's password, 
+
+If the attacker knows the user's password, they can get an identifier
+from the server. However, without the user's device, they don't have
+their secret key for the PIN computation.
+
+\paragraph{Device Compromise}
+The attacker can access the user's secret key, but they have no
+information about the user's password, and thus can not log in to get an
+identifier from the server.
+
+\paragraph{Channel Compromise}
+There are three channels, each connecting the client (C), the server
+(S), and the device (D), as seen in the image below. Similar to the
+device compromise, the attacker can not get the user's secret key. While
+the channel from the device to the server is a regular channel that the
+attacker can get the identifier and the PIN from, they can not use these
+to authenticate themselves. 
+
+\paragraph{User Negligence}
+This occurs when a user accidentally approves an attacker's session.
+This only happens if a user enters an identifier that doesn't match the
+one displayed to them, and does match the identifier given to the
+attacker. In our implementation, the chances of this occurring is 1 in a
+million (0.0001\%).
+
+\paragraph{Attacks on Third Parties}
+2D-2FA does not use any 3rd parties or introduce any additional
+authentication infrastructure into its system beyond those that are
+already well established (HMAC, SSL/TLS, random number generation,
+etc.), and thus we do not need to rely on any 3rd parties, eliminating
+this risk.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
