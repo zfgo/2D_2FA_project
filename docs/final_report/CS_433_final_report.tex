@@ -1,13 +1,11 @@
-\documentclass[11pt]{article} % EXPAND THE PREAMBLE TO SEE ALL OF THECODE
+\documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
-\usepackage{amsmath, amsfonts} % math features and the \begin{aligh*}feature
+\usepackage{amsmath, amsfonts} % math features and the \begin{align*}feature
 \usepackage[margin=1.0in]{geometry} % [margin=1.0in]
 \usepackage{graphicx} % more arguments for the \includegraphics command
 \usepackage{enumitem} % allows better formatting for list environments
 \newcommand{\comment}[1]{} % for multiline comments
 \usepackage[stretch=10]{microtype} % best package ever
-% \usepackage{changepage} \usepackage[symbol]{footmisc} % use symbols
-% instead of numbers for footnotes
 \usepackage{titletoc} % better toc formatting
 \usepackage{titlesec} % to make fancier section/sub/subsubsectionformatting
 \usepackage[nottoc]{tocbibind} % add references to the toc
@@ -210,15 +208,30 @@ report, but are repeated here for posterity.
 \section{Related Work}
 
 In this section, we will look at some traditional 2FA implementations,
-chiefly hardware token-based authentication and single sign-on software
-token-based authentication.
+chiefly SMS-based authentication, push-based authentication, and
+hardware-based authentication using U2F security keys. Information about
+each of these authentication methods will come \cite{UsabilityStudy}, a
+usability study that looked at multiple 2FA methods. 
 
-\subsection{Hardware Token Authentication}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{SMS-Based Authentication}
+
+Perhaps the most widely used 2FA method, SMS-based authentication
+involves sending the user a one-time code via text to their personal
+device. Because mobile devices are so widely used, this method is widely
+deployed and available to many users. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Push-Based Authentication}
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Single Sign-On Software Token Authentication}
+\subsection{Hardware-Based Authentication}
+
+
+
 
 
 
@@ -384,14 +397,14 @@ expires.
 
 \paragraph{Implementation Differences}
 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO (need to do)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Security Analysis}
 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO (need to finish)
 
 There are several possible avenues of attack to the 2D-2FA system that
 are proposed in \cite{shirvanian2d2fa}. In this section, we will go over
