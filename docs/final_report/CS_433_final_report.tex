@@ -368,11 +368,7 @@ expires.
 
 \paragraph{Implementation Differences}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Results}
-
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -482,12 +478,42 @@ that we send over those connections instead of using TLS.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
 
-
+We created a proof of concept implementation of the 2D-2FA system,
+finding that it was easy to understand, build, and use. While we did not
+attempt to attack our system, we found the security analysis in
+\cite{shirvanian2d2fa} to be clear, thorough, and reasonable. Moreover,
+we did find that the design goals laid out in section 3.3.2 of
+\cite{shirvanian2d2fa} were accomplished during our implementation. It
+was relatively easy to implement our system, easy to use, and only made
+use of the Python standard library (except Flask, which was used for the
+simple web interface). 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Complications}
 
+There were relatively few complications that arose during our project,
+all of which we were able to overcome. The first arose when we were
+trying to figure out the socket communications in the Python
+environment. However, after reading some documentation and getting a
+better understanding of the Python standard library socket API, we were
+able to successfully communicate between the device and the server. 
 
+Finally, because of the limitations of what information can be passed
+between the server and the device, we had to use two threads in the
+server to get everything working correctly. These threads did the
+following: 
+\begin{enumerate}
+    \item listen for connections from the device, verify the PIN that
+    was sent from the device, add a user to the ``authorized'' list, and
+    check for expired entries on the identifier list and authorized
+    list;
+    \item run the Flask app, listen for users logging in, generate the
+    identifier, display the identifier to the user, and check if a user
+    is authorized (on the authorized list). 
+\end{enumerate}
+However, once we figured out that the server needed multiple threads to
+function as desired in our implementation, it was relatively light work
+to add the multithreaded functionality. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Lessons}
@@ -521,8 +547,41 @@ to do so.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Recommendations}
 
+While the study completed in \cite{shirvanian2d2fa} found that 75\% of
+users preferred 2D-2FA over the more commonly know PIN-2FA, we believe
+that 2D-2FA could be better used in tandem with another 2FA method.
+There are multiple 2FA methods we found, most notably Sound-Proof
+\cite{soundProof} and Typing-Proof \cite{liuTypingProof}. For the
+purposes of brevity, we will focus on how 2D-2FA can be used with
+Typing-Proof. 
 
-Possibly add to this with typing proof \cite{liuTypingProof}
+Typing-Proof, introduced by Liu, Li, and Deng, uses a registered phone
+to listen to the user's keystrokes when they type a random code
+presented to them during login. The time between the keystrokes is also
+recorded by the server, and is compared with the recording taken by the
+user's device. When the timing between the keystrokes recorded by the
+device and by the server match, the user is successfully authenticated. 
+
+The advantages that Typing-Proof brings to the table is decreased login
+time, as well as less interaction between the user and their personal
+device, which can be cumbersome and annoying, thus increasing usability
+\cite{liuTypingProof}. In fact, the system usability scale (SUS) score
+of Typing-Proof is 81.7, whereas the SUS of 2D-2FA is 75. This is likely
+because 2D-2FA still requires the user to interact with their device by
+entering the identifier. Note, however, that no study comparing the two
+2FA methods has been conducted.  
+
+We believe that Typing-Proof is a strong alternative to 2D-2FA, and it
+could be used in tandem with 2D-2FA. In such a scheme, a user might
+log in normally, with their device listening to their keystrokes. If
+they are in a loud or busy environment, such as a caf\'e,
+\cite{liuTypingProof} found that users are less likely to user
+Typing-Proof. In this case, it would be convenient to use 2D-2FA as an
+alternative. Additionally, Typing-Proof has a measured false acceptance
+rate of about 0.015, and during cases where the device is unsure about
+the validity of the keystrokes it heard, it could use 2D-2FA instead.
+
+% Possibly add to this with typing proof \cite{liuTypingProof}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

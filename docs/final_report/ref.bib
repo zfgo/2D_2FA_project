@@ -1,10 +1,19 @@
-@misc{shirvanian2d2fa,
-      title={2D-2FA: A New Dimension in Two-Factor Authentication}, 
-      author={Maliheh Shirvanian and Shashank Agrawal},
-      year={2021},
-      eprint={2110.15872},
-      archivePrefix={arXiv},
-      primaryClass={cs.CR}
+@inproceedings{shirvanian2d2fa,
+    author = {Shirvanian, Maliheh and Agrawal, Shashank},
+    title = {2D-2FA: A New Dimension in Two-Factor Authentication},
+    year = {2021},
+    isbn = {9781450385794},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3485832.3485910},
+    doi = {10.1145/3485832.3485910},
+    abstract = {We propose a two-factor authentication (2FA) mechanism called 2D-2FA to address security and usability issues in existing methods. 2D-2FA has three distinguishing features: First, after a user enters a username and password on a login terminal, a unique identifier is displayed to her. She inputs the same identifier on her registered 2FA device, which ensures appropriate engagement in the authentication process. Second, a one-time PIN is computed on the device and automatically transferred to the server. Thus, the PIN can have very high entropy, making guessing attacks infeasible. Third, the identifier is also incorporated into the PIN computation, which renders concurrent attacks ineffective. Third-party services such as push-notification providers and 2FA service providers, do not need to be trusted for the security of the system. The choice of identifiers depends on the device form factor and the context. Users could choose to draw patterns, capture QR codes, etc. We provide a proof of concept implementation, and evaluate performance, accuracy, and usability of the system. We show that the system offers a lower error rate (about half) and better efficiency (2-3 times faster) compared to the commonly used PIN-2FA. Our study indicates a high level of usability with a SUS of 75, and a high perception of efficiency, security, accuracy, and adoptability.},
+    booktitle = {Proceedings of the 2021 Annual Computer Security Applications Conference},
+    pages = {482--496},
+    numpages = {15},
+    keywords = {Passwords, Two Factor Authentication, Authentication},
+    location = {Virtual Event, USA},
+    series = {ACSAC '21}
 }
 
 @inproceedings{liuTypingProof,
@@ -23,7 +32,6 @@
     location = {San Juan, PR, USA},
     series = {ACSAC '18}
 }
-
 
 @article{MFAProtocols,
     author = {Jacomme, Charlie and Kremer, Steve},
@@ -101,4 +109,18 @@
     keywords = {security and privacy, multi-factor authentication, authentication, push-based two-factor authentication},
     location = {Virtual Event, Hong Kong},
     series = {ASIA CCS '21}
+}
+@inproceedings{soundProof,
+    author = {Karapanos, Nikolaos and Marforio, Claudio and Soriente, Claudio and \v{C}apkun, Srdjan},
+    title = {Sound-Proof: Usable Two-Factor Authentication Based on Ambient Sound},
+    year = {2015},
+    isbn = {9781931971232},
+    publisher = {USENIX Association},
+    address = {USA},
+    abstract = {Two-factor authentication protects online accounts even if passwords are leaked. Most users, however, prefer password-only authentication. One reason why two-factor authentication is so unpopular is the extra steps that the user must complete in order to log in. Currently deployed two-factor authentication mechanisms require the user to interact with his phone to, for example, copy a verification code to the browser. Two-factor authentication schemes that eliminate user-phone interaction exist, but require additional software to be deployed.In this paper we propose Sound-Proof, a usable and deployable two-factor authentication mechanism. Sound-Proof does not require interaction between the user and his phone. In Sound-Proof the second authentication factor is the proximity of the user's phone to the device being used to log in. The proximity of the two devices is verified by comparing the ambient noise recorded by their microphones. Audio recording and comparison are transparent to the user, so that the user experience is similar to the one of password-only authentication. Sound-Proof can be easily deployed as it works with current phones and major browsers without plugins. We build a prototype for both Android and iOS. We provide empirical evidence that ambient noise is a robust discriminant to determine the proximity of two devices both indoors and outdoors, and even if the phone is in a pocket or purse. We conduct a user study designed to compare the perceived usability of Sound-Proof with Google 2-Step Verification. Participants ranked Sound-Proof as more usable and the majority would be willing to use Sound-Proof even for scenarios in which two-factor authentication is optional.},
+    booktitle = {Proceedings of the 24th USENIX Conference on Security Symposium},
+    pages = {483--498},
+    numpages = {16},
+    location = {Washington, D.C.},
+    series = {SEC '15}
 }
