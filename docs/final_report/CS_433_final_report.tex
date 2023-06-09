@@ -23,9 +23,27 @@
 
 \section*{Abstract}
 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+We created a bare-bones proof of concept implementation of a recently
+proposed two-factor authentication (2FA) mechanism called 2D-2FA. In
+this 2FA scheme, a user enters their login information on a login
+interface, attempting to log in to a web service that has implemented
+2D-2FA. A unique identifier is displayed to the user, which they enter
+into a registered device. On this device, a PIN is computed using the
+current time and the identifier, and is automatically transfered to the
+server for verification. 
 
-\tableofcontents
+The system uses well-established and proven technologies, and thus does
+not need to trust third party 2FA services. This makes 2D-2FA relatively
+easy to implement for any service that requires user authentication, and
+allows users and developers to trust the authentication method. 
+
+We also provide details of our implementation, and how it differs from
+the implementation laid out in the original proposal. In addition, look
+at a security analysis of the system, and discuss possible future
+improvements, or methods to use 2D-2FA in tandem with other proposed
+authentication methods. 
+
+% \tableofcontents
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -245,7 +263,7 @@ In this authentication scheme, the user receives a push notification to
 their mobile device after attempting to log in to their account. The
 push notification allows the user to approve or deny their login
 attempt. This method is quite common for Google accounts, as well as
-other commercial applications, like DUO. 
+other commercial applications, like Duo. 
 
 Push-based authentication does require the internet, but it is generally
 thought to be more usable than other 2FA authentication schemes,
@@ -456,8 +474,6 @@ TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO (need to do)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Security Analysis}
 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO (need to finish)
-
 There are several possible avenues of attack to the 2D-2FA system that
 are proposed in \cite{shirvanian2d2fa}. In this section, we will go over
 each attack vector and analyze how the system protects against these
@@ -479,7 +495,7 @@ without access to the user's device, the attacker has no way to generate
 a valid PIN without guessing the user's secret key, which would not be
 feasible. 
 
-In our implementation, TODO
+% In our implementation, 
 
 \paragraph{Device Compromise}
 In this attack, an attacker would have compromised the user's device,
@@ -494,7 +510,7 @@ log in on the client. If the user has chosen a secure password that can
 not easily be guessed, the attacker must guess the user's password to
 gain access to their account, which would not be feasible. 
 
-In our implementation, TODO
+% In our implementation, 
 
 \paragraph{Channel Compromise}
 In this attack, an attacker has control over the channels connecting the
@@ -506,19 +522,14 @@ the server is a regular channel. In this attack vector, the attacker
 could either listen to the channels (eavesdrop), or they could modify or
 block the network traffic. 
 
-This attack is prevented because, like with the client compromise, the
-attacker does not know the user's password. 
+This attack is prevented because the time slice is not exclusively used
+to generate the PIN. Because of the fact that each identifier is unique,
+if a PIN that is sent on the channel corresponds to the time slice that
+the attacker needs, it will not correspond to the identifier that the
+attacker needs. This renders the copying of data from the device-server
+channel useless. 
 
-TODO TODO TODO TODO
-
-In our implementation, TODO
-
-% There are three channels, each connecting the client (C), the server
-% (S), and the device (D), as seen in the image below. Similar to the
-% device compromise, the attacker can not get the user's secret key. While
-% the channel from the device to the server is a regular channel that the
-% attacker can get the identifier and the PIN from, they can not use these
-% to authenticate themselves. 
+% In our implementation, 
 
 \paragraph{User Negligence}
 In this attack, a user is simply negligent, and inadvertently grants
@@ -582,7 +593,7 @@ able to successfully communicate between the device and the server.
 Finally, because of the limitations of what information can be passed
 between the server and the device, we had to use two threads in the
 server to get everything working correctly. These threads did the
-following: 
+following, respectively: 
 \begin{enumerate}
     \item listen for connections from the device, verify the PIN that
     was sent from the device, add a user to the ``authorized'' list, and
@@ -592,7 +603,7 @@ following:
     identifier, display the identifier to the user, and check if a user
     is authorized (on the authorized list). 
 \end{enumerate}
-However, once we figured out that the server needed multiple threads to
+However, once we figured out that the server code needed multiple threads to
 function as desired in our implementation, it was relatively light work
 to add the multithreaded functionality. 
 
@@ -668,5 +679,13 @@ the validity of the keystrokes it heard, it could use 2D-2FA instead.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{ieeetr}
 \bibliography{ref}
+
+\appendix
+\section{Description of Developed Software}
+
+Descriptions of the software we developed can be found in the function
+description comments and the file descriptions comments for the code we
+wrote. All of the program files are in the /src directory of the
+repository. 
 
 \end{document}
