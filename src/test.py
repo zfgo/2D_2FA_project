@@ -1,3 +1,6 @@
+"""This file contains some simple test cases ensuring that the
+authentication methods implemented in our system work as desired.
+"""
 import device
 import deviceutils
 import server
