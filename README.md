@@ -1,4 +1,18 @@
-# 2D_2FA_project
+# 2D-2FA project
+
+CS 433: Computer and Network Security
+
+Zane Globus-O'Harra and Doug Ure
+
+## Installation Instructions
+
+1. Ensure Git is installed `git --version`. If Git is not installed,
+   please [download](https://git-scm.com/downloads) and install it.
+1. Clone the repository `git@github.com:AmonDestroyer/cs422-proj2.git`
+1. Ensure Python is installed `python3 --version`. If Python is not
+   installed, please [download](https://www.python.org/downloads/) and
+   install it. 
+1. Install the requirements, `pip3 install -r requirements.txt`
 
 ## User Guide
 
