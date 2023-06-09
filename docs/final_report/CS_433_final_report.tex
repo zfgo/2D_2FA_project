@@ -165,7 +165,7 @@ becomes more prevalent, attackers will focus more of their efforts on
 finding ways to break through its layers of security. Our project will
 help us learn about ways to further increase the security of 2FA by
 using additional information along with the user's credentials and the
-server-provided ``identifier.''
+server-provided identifier.
 
 This is also a learning opportunity for us. Neither of us are very
 familiar with security, and it is something that we are very interested
@@ -467,8 +467,37 @@ expires.
 
 \paragraph{Implementation Differences}
 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO (need to do)
+The differences between our implementation and the implementation
+described in section 6 of \cite{shirvanian2d2fa} were relatively minor,
+especially for the authentication phase. Because our main motivations
+for this project were to learn more about authentication security and
+2FA, we were more interested in how the authentication phase was
+accomplished, and thus spent less time on the implementation of the
+registration phase. 
 
+Because of this, our registration phase is already built-in to our
+system by having a pre-defined set of users. Had we not done this, we
+would have had to set up an account creation system, or some way to
+create a new user and register the user with both the server and the
+device. By having a pre-defined set of users, this meant that we could
+have a user's secret keys already placed on the server and the device. 
+
+We also used a 6-digit code for our identifier, instead of the fourgram
+pattern or the QR code recommended by \cite{shirvanian2d2fa}. This made
+our implementation easier, as we did not have to create a system to
+display or interpret these patterns. In addition, had we used QR codes,
+we would have had to find a way to implement the generation and scanning
+of these codes, which we decided was outside of the scope of the
+project, and would likely have cost us too much time. 
+
+Finally, we use the less secure TCP connections instead of TLS or SSL,
+as recommended by \cite{shirvanian2d2fa}. We do not believe that this
+compromises the security of our implementation, because these
+connections are only for the channel between the device and the server.
+This is satisfactory for our implementation because this channel is
+expected to be a regular channel anyways (see the ``Channel Compromise''
+in section 4). The TCP connections were also the easiest to implement
+using Python's standard library \texttt{socket} API. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -562,9 +591,8 @@ and well-studied technologies (HMAC, SSL/TLS, random number generation,
 etc.), further reducing attack vectors.
 
 In our implementation, we use the well-established technologies
-mentioned in and used by \cite{shirvanian2d2fa}. The only variation is
-that we use TCP connections and encrypt the messages
-that we send over those connections instead of using TLS.
+mentioned in and used by \cite{shirvanian2d2fa}, the only variation
+being that we use TCP connections instead of using TLS.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
